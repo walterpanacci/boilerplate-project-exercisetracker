@@ -26,6 +26,7 @@ const userSchema = new Schema({
 })
 
 
+
 const User = mongoose.model('User', userSchema);
 const Exercise = mongoose.model('Exercise', exerciseSchema);
 
@@ -65,7 +66,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
   const {_id, username} = await User.findOne({_id: id}).select('-__v');
   const description = req.body.description;
   const duration = +req.body.duration;
-  const date = req.body?.date || new Date().toDateString();
+  const date = req.body?.date || new Date().toISOString().substring(0, 10);
   const newExercise = {date: date, duration: duration, description: description};
   console.log(newExercise);
   Exercise.create({username: id,
@@ -78,16 +79,23 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
 })
 
 app.get('/api/users/:_id/logs', async (req, res) => {
-
+  const id = req.params._id;
+  const {username} = await User.findOne({_id: id});
   const from = req.query.from || new Date(0).toISOString().substring(0, 10);
 	const to =
 		req.query.to || new Date(Date.now()).toISOString().substring(0, 10);
 	const limit = Number(req.query.limit) || 0;
 
-
-  const id = req.params._id;
+  let exercises = await Exercise.find({
+		username: id,
+		date: { $gte: from, $lte: to },
+	})
+		.select('-_id -__v -username')
+		.limit(limit)
+  /*const id = req.params._id;
   const {username} = await User.findOne({_id: id});
-  const exercises = await Exercise.find({username: id}).select('-_id -__v -username');
+  const exercises = await Exercise.find({username: id}).select('-_id -__v -username').limit(limit);
+  */
   /*let exercises = await Exercise.find({
 		username: id,
 		date: { $gte: from, $lte: to },
