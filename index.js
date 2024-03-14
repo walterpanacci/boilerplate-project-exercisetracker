@@ -95,7 +95,7 @@ app.get('/api/users/:_id/logs', async (req, res) => {
 		.select('-_id -__v -username')
 		.limit(limit)
   
-  const count = exercises.length();
+  const count = exercises.length;
   res.json({username: username, count: count, _id: id, log: exercises})
 
 })
