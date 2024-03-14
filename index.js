@@ -74,7 +74,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
     duration: duration,
     date: date
   });
-  res.json({_id: _id, username: username, ...newExercise});
+  res.json({username: username, description: description, duration: duration, date: new Date(date).toDateString(), _id: _id});
 
 })
 
@@ -103,7 +103,7 @@ app.get('/api/users/:_id/logs', async (req, res) => {
 		.select('-_id -__v -username')
 		.limit(limit)*/
   
-const count = exercises.length;
+  const count = exercises.length;
   let parsedDatesLog = exercises.map((exercise) => {
 		return {
 			description: exercise.description,
