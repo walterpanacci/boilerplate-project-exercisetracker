@@ -103,8 +103,15 @@ app.get('/api/users/:_id/logs', async (req, res) => {
 		.select('-_id -__v -username')
 		.limit(limit)*/
   
-  const count = exercises.length;
-  res.json({username: username, count: count, _id: id, log: exercises})
+const count = exercises.length;
+  let parsedDatesLog = exercises.map((exercise) => {
+		return {
+			description: exercise.description,
+			duration: exercise.duration,
+			date: new Date(exercise.date).toDateString(),
+		};
+	});
+  res.json({username: username, count: count, _id: id, log: parsedDatesLog})
 
 })
 
