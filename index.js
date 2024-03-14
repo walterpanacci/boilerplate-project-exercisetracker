@@ -87,13 +87,13 @@ app.get('/api/users/:_id/logs', async (req, res) => {
 
   const id = req.params._id;
   const {username} = await User.findOne({_id: id});
-  //const exercises = await Exercise.find({username: id}).select('-_id -__v -username');
-  let exercises = await Exercise.find({
+  const exercises = await Exercise.find({username: id}).select('-_id -__v -username');
+  /*let exercises = await Exercise.find({
 		username: id,
 		date: { $gte: from, $lte: to },
 	})
 		.select('-_id -__v -username')
-		.limit(limit)
+		.limit(limit)*/
   
   const count = exercises.length;
   res.json({username: username, count: count, _id: id, log: exercises})
